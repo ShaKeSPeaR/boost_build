@@ -17,9 +17,9 @@ REM === USAGE =================================================================
 
 REM  boost_build.bat VS_toolset_ver [build cores count] [xp mode flag]
 
-REM  VS_toolset_ver - point to msvs toolset. 10 for MSVS2010, 11 for MSVS2012
+REM  VS_toolset_ver - point to msvs toolset. 10 for MSVS2010, 11 for MSVS2012 or 14 for MSVS2015
 REM  [build cores count] - number of PC cores uses for build. Number from 1 to N
-REM  [xp mode flag] - using xp toolset for MSVS. Any value for enable XP mode
+REM  [xp mode flag] - using xp toolset for MSVS (only for VS 10 or 11). Any value for enable XP mode
 
 REM === EXAMPLES ==============================================================
 REM   boost_build 11 4 1 - building with v110_xp toolset on 4 cores.
@@ -36,9 +36,9 @@ set XP_TOOSET_ENABLE=%3
 
 ::check input params
 if "%MSVC_VER%" == "" (
-    echo FAIL: MS VS toolset version needed [10 or 11]
+    echo FAIL: MS VS toolset version needed [10,11 or 14]
     echo Usage: boost_build.bat VS_toolset_ver [build cores count] [xp mode flag]
-    echo   - VS_toolset_ver - point to msvs toolset. 10 for MSVS2010, 11 for MSVS2012
+    echo   - VS_toolset_ver - point to msvs toolset. 10 for MSVS2010, 11 for MSVS2012, 14 for MSVS2015
     echo   - [build cores count] - number of PC cores uses for build. Number from 1 to N. Def - 2
     echo   - [xp mode flag] - using xp toolset for MSVS. Any value for enable XP mode
     echo    
@@ -49,8 +49,10 @@ if "%MSVC_VER%" == "" (
 
 if not "%MSVC_VER%" == "10" (
     if not "%MSVC_VER%" == "11" (    
-        echo FAIL: MS VS wrong format. Need - 10 or 11
-        exit /b 1
+        if not "%MSVC_VER%" == "14" (    
+            echo FAIL: MS VS wrong format. Need - 10, 11 or 14
+            exit /b 1
+        )
     )
 )
 
@@ -58,7 +60,7 @@ if not "%MSVC_VER%" == "10" (
 if "%USED_CORES%" == "" set USED_CORES=2
 
 ::caption and defines for v110_xp toolset
-set XP_TOOSET_CAPTION=
+set XP_TOOSET_CAPTION=Win 7+
 set XP_TOOLSET_DEFINES=
 
 ::standalone check MSVS12 and setup variables
